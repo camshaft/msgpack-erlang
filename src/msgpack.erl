@@ -136,33 +136,6 @@ unpack(Badarg, _Opts) ->
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
 
-test_data()->
-    [true, false, nil,
-     0, 1, 2, 123, 512, 1230, 678908, 16#FFFFFFFFFF,
-     -1, -23, -512, -1230, -567898, -16#FFFFFFFFFF,
-     -16#80000001,
-     123.123, -234.4355, 1.0e-34, 1.0e64,
-     [23, 234, 0.23],
-     <<"hogehoge">>, <<"243546rf7g68h798j", 0, 23, 255>>,
-     <<"hoasfdafdas][">>,
-     [0,42, <<"sum">>, [1,2]], [1,42, nil, [3]],
-     -234, -40000, -16#10000000, -16#100000000,
-     42
-    ].
-
-basic_test()->
-    Tests = test_data(),
-    MatchFun0 = fun(Term) ->
-                        {ok, Term} = msgpack:unpack(msgpack:pack(Term)),
-                        Term
-                end,
-    MatchFun1 = fun(Term) ->
-                        {ok, Term} = msgpack_nif:unpack(msgpack_nif:pack(Term)),
-                        Term
-                end,
-    Tests = lists:map(MatchFun0, Tests),
-    Tests = lists:map(MatchFun1, Tests).
-
 test_p(Len,Term,OrigBin,Len) ->
     {ok, Term}=msgpack:unpack(OrigBin);
 
